@@ -55,25 +55,36 @@ class TextDiffApp(tk.Tk):
         """
         Create and arrange the main widgets of the application, including text areas and buttons.
         """
-        frame: ttk.Frame = ttk.Frame(self, padding=10)
-        frame.pack(fill=tk.BOTH, expand=True)
+        # Utilisation d'un PanedWindow horizontal pour garantir la même largeur
+        paned = ttk.PanedWindow(self, orient=tk.HORIZONTAL)
+        paned.pack(fill=tk.BOTH, expand=True, padx=10, pady=(10, 0))
 
-        self.text_a: tk.Text = tk.Text(frame, wrap=tk.WORD, undo=True)
-        self.text_b: tk.Text = tk.Text(frame, wrap=tk.WORD, undo=True)
+        # Cadre pour la première zone de texte
+        frame_a = ttk.Frame(paned)
+        self.text_a = tk.Text(frame_a, wrap=tk.WORD, undo=True, font=("Consolas", 12), borderwidth=2, relief="groove")
+        self.text_a.pack(fill=tk.BOTH, expand=True)
+        paned.add(frame_a, weight=1)
 
-        self.text_a.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=(0, 5))
-        self.text_b.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=(5, 0))
+        # Cadre pour la seconde zone de texte
+        frame_b = ttk.Frame(paned)
+        self.text_b = tk.Text(frame_b, wrap=tk.WORD, undo=True, font=("Consolas", 12), borderwidth=2, relief="groove")
+        self.text_b.pack(fill=tk.BOTH, expand=True)
+        paned.add(frame_b, weight=1)
 
-        button_frame: ttk.Frame = ttk.Frame(self, padding=10)
-        button_frame.pack(fill=tk.X)
+        # Cadre pour les boutons, centré
+        button_frame = ttk.Frame(self)
+        button_frame.pack(fill=tk.X, pady=15)
 
-        compare_btn: ttk.Button = ttk.Button(
+        compare_btn = ttk.Button(
             button_frame, text="Comparer", command=self.compare_texts
         )
-        clear_btn: ttk.Button = ttk.Button(button_frame, text="Effacer", command=self.clear_texts)
+        clear_btn = ttk.Button(button_frame, text="Effacer", command=self.clear_texts)
 
-        compare_btn.pack(side=tk.LEFT, padx=5)
-        clear_btn.pack(side=tk.LEFT, padx=5)
+        # Centrage des boutons
+        button_frame.columnconfigure(0, weight=1)
+        compare_btn.grid(row=0, column=1, padx=10)
+        clear_btn.grid(row=0, column=2, padx=10)
+        button_frame.columnconfigure(3, weight=1)
 
     def configure_tags(self) -> None:
         """
