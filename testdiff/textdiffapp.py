@@ -61,13 +61,21 @@ class TextDiffApp(tk.Tk):
 
         # Cadre pour la première zone de texte
         frame_a = ttk.Frame(paned)
-        self.text_a = tk.Text(frame_a, wrap=tk.WORD, undo=True, font=("Consolas", 12), borderwidth=2, relief="groove")
+        self.text_a = tk.Text(
+            frame_a, wrap=tk.WORD,
+            undo=True, font=("Consolas", 12),
+            borderwidth=2, relief="groove"
+        )
         self.text_a.pack(fill=tk.BOTH, expand=True)
         paned.add(frame_a, weight=1)
 
         # Cadre pour la seconde zone de texte
         frame_b = ttk.Frame(paned)
-        self.text_b = tk.Text(frame_b, wrap=tk.WORD, undo=True, font=("Consolas", 12), borderwidth=2, relief="groove")
+        self.text_b = tk.Text(
+            frame_b, wrap=tk.WORD,
+            undo=True, font=("Consolas", 12),
+            borderwidth=2, relief="groove"
+        )
         self.text_b.pack(fill=tk.BOTH, expand=True)
         paned.add(frame_b, weight=1)
 
