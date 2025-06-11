@@ -9,7 +9,7 @@ main application loop.
 import os
 import sys
 
-from testdiff.TextDiffApp import TextDiffApp
+from testdiff.textdiffapp import TextDiffApp
 
 # Determine the icon path based on the execution context
 if hasattr(sys, "_MEIPASS") and getattr(sys, "_MEIPASS"):
