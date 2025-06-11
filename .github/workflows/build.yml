@@ -1,0 +1,42 @@
+name: Build & Test
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+permissions:
+    contents: read
+
+jobs:
+  build-test:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Lint with pylint
+        run: |
+          pylint **/*.py
+
+      - name: Build executable with PyInstaller
+        run: |
+          python -m PyInstaller --onefile --windowed --icon=assets/icon.ico --name=Textdiff --add-data "assets/icon.ico;assets" main.py
+
+      - name: Upload executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: Textdiff
+          path: dist/Textdiff.exe

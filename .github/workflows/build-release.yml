@@ -1,0 +1,47 @@
+name: Build and Upload to Release
+
+on:
+  release:
+    types: [created, published]
+
+permissions:
+    contents: write
+
+
+jobs:
+  build-and-upload:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Lint with pylint
+        run: |
+          pylint **/*.py
+
+      - name: Build solution
+        run: |
+          python -m PyInstaller --onefile --windowed --icon=assets/icon.ico --name=Textdiff --add-data "assets/icon.ico;assets" main.py
+
+      - name: Upload executable artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Textdiff
+          path: dist/Textdiff.exe
+
+      - name: Upload executable to release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/Textdiff.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
