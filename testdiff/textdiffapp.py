@@ -30,7 +30,9 @@ class TextDiffApp(tk.Tk):
         self.geometry("1000x600")
         self.minsize(800, 400)
 
-        self.icon_path: str | None = os.path.abspath(icon_path) if icon_path else None
+        self.icon_path: str | None = (
+            os.path.abspath(icon_path) if icon_path else None
+        )
         self.set_icon()
 
         self.create_widgets()

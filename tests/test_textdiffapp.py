@@ -5,7 +5,7 @@ Unit tests for the TextDiffApp class in the testdiff module.
 import tkinter as tk
 import unittest
 
-from testdiff.TextDiffApp import TextDiffApp
+from testdiff.textdiffapp import TextDiffApp
 
 
 class TestTextdiffapp(unittest.TestCase):
