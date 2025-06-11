@@ -9,6 +9,7 @@ import difflib
 import os
 import tkinter as tk
 from tkinter import ttk
+from typing import Optional, List
 
 
 class TextDiffApp(tk.Tk):
@@ -19,7 +20,7 @@ class TextDiffApp(tk.Tk):
     buttons, and visual highlighting of differing text segments.
     """
 
-    def __init__(self, icon_path=None) -> None:
+    def __init__(self, icon_path: Optional[str] = None) -> None:
         """
         Initialize the TextDiffApp window, set its properties, and create widgets.
 
@@ -30,7 +31,7 @@ class TextDiffApp(tk.Tk):
         self.geometry("1000x600")
         self.minsize(800, 400)
 
-        self.icon_path: str | None = (
+        self.icon_path: Optional[str] = (
             os.path.abspath(icon_path) if icon_path else None
         )
         self.set_icon()
@@ -50,36 +51,38 @@ class TextDiffApp(tk.Tk):
             except tk.TclError:
                 pass
 
-    def create_widgets(self):
+    def create_widgets(self) -> None:
         """
         Create and arrange the main widgets of the application, including text areas and buttons.
         """
-        frame = ttk.Frame(self, padding=10)
+        frame: ttk.Frame = ttk.Frame(self, padding=10)
         frame.pack(fill=tk.BOTH, expand=True)
 
-        self.text_a = tk.Text(frame, wrap=tk.WORD, undo=True)
-        self.text_b = tk.Text(frame, wrap=tk.WORD, undo=True)
+        self.text_a: tk.Text = tk.Text(frame, wrap=tk.WORD, undo=True)
+        self.text_b: tk.Text = tk.Text(frame, wrap=tk.WORD, undo=True)
 
         self.text_a.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=(0, 5))
         self.text_b.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=(5, 0))
 
-        button_frame = ttk.Frame(self, padding=10)
+        button_frame: ttk.Frame = ttk.Frame(self, padding=10)
         button_frame.pack(fill=tk.X)
 
-        compare_btn = ttk.Button(button_frame, text="Comparer", command=self.compare_texts)
-        clear_btn = ttk.Button(button_frame, text="Effacer", command=self.clear_texts)
+        compare_btn: ttk.Button = ttk.Button(
+            button_frame, text="Comparer", command=self.compare_texts
+        )
+        clear_btn: ttk.Button = ttk.Button(button_frame, text="Effacer", command=self.clear_texts)
 
         compare_btn.pack(side=tk.LEFT, padx=5)
         clear_btn.pack(side=tk.LEFT, padx=5)
 
-    def configure_tags(self):
+    def configure_tags(self) -> None:
         """
         Configure text tags for highlighting differences in the text widgets.
         """
         self.text_a.tag_config("diff", background="lightcoral")
         self.text_b.tag_config("diff", background="lightgreen")
 
-    def clear_texts(self):
+    def clear_texts(self) -> None:
         """
         Clear the contents and highlighting of both text widgets.
         """
@@ -87,26 +90,32 @@ class TextDiffApp(tk.Tk):
             widget.delete("1.0", tk.END)
             widget.tag_remove("diff", "1.0", tk.END)
 
-    def compare_texts(self):
+    def compare_texts(self) -> None:
         """
         Compare the contents of the two text widgets line by line and highlight differences.
         """
         self.text_a.tag_remove("diff", "1.0", tk.END)
         self.text_b.tag_remove("diff", "1.0", tk.END)
 
-        a_lines = self.text_a.get("1.0", tk.END).splitlines()
-        b_lines = self.text_b.get("1.0", tk.END).splitlines()
+        a_lines: List[str] = self.text_a.get("1.0", tk.END).splitlines()
+        b_lines: List[str] = self.text_b.get("1.0", tk.END).splitlines()
 
-        max_lines = max(len(a_lines), len(b_lines))
+        max_lines: int = max(len(a_lines), len(b_lines))
 
         for i in range(max_lines):
-            line_a = a_lines[i] if i < len(a_lines) else ""
-            line_b = b_lines[i] if i < len(b_lines) else ""
+            line_a: str = a_lines[i] if i < len(a_lines) else ""
+            line_b: str = b_lines[i] if i < len(b_lines) else ""
 
             self.highlight_differences(line_a, self.text_a, i + 1, line_b, self.text_b)
 
     @staticmethod
-    def highlight_differences(line_a, widget_a, line_num_a, line_b, widget_b):
+    def highlight_differences(
+            line_a: str,
+            widget_a: tk.Text,
+            line_num_a: int,
+            line_b: str,
+            widget_b: tk.Text
+    ) -> None:
         """
         Highlight the differences between two lines in their respective text widgets.
 
@@ -116,21 +125,21 @@ class TextDiffApp(tk.Tk):
         :param line_b: The text from the second widget (Text B).
         :param widget_b: The second text widget (Text B).
         """
-        sm = difflib.SequenceMatcher(None, line_a, line_b)
+        sm: difflib.SequenceMatcher = difflib.SequenceMatcher(None, line_a, line_b)
         for tag, i1, i2, j1, j2 in sm.get_opcodes():
             if tag != "equal":
                 # Text A
                 if i2 > i1:
-                    start = f"{line_num_a}.{i1}"
-                    end = f"{line_num_a}.{i2}"
+                    start: str = f"{line_num_a}.{i1}"
+                    end: str = f"{line_num_a}.{i2}"
                     widget_a.tag_add("diff", start, end)
                 # Text B
                 if j2 > j1:
-                    start = f"{line_num_a}.{j1}"
-                    end = f"{line_num_a}.{j2}"
+                    start: str = f"{line_num_a}.{j1}"
+                    end: str = f"{line_num_a}.{j2}"
                     widget_b.tag_add("diff", start, end)
 
-    def run(self):
+    def run(self) -> None:
         """
         Start the application's main loop.
         This method is called to run the application.
@@ -139,5 +148,5 @@ class TextDiffApp(tk.Tk):
 
 
 if __name__ == "__main__":
-    app = TextDiffApp()
+    app: TextDiffApp = TextDiffApp()
     app.run()
