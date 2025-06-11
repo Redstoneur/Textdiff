@@ -15,8 +15,8 @@ class TextDiffApp(tk.Tk):
     """
     A graphical application for comparing two text inputs and highlighting their differences.
 
-    Inherits from tk.Tk and provides a user interface with two text areas, comparison and clear buttons,
-    and visual highlighting of differing text segments.
+    Inherits from tk.Tk and provides a user interface with two text areas, comparison and clear
+    buttons, and visual highlighting of differing text segments.
     """
 
     def __init__(self, icon_path=None) -> None:
